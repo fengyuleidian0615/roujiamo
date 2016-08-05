@@ -72,7 +72,7 @@ After the build/install, set MESOS_PROJECT enviroment.
     I0806 18:54:53.328322    45 sched.cpp:1987] Asked to stop the driver
 
 ## Dependcies
-* Need a small patch for ompi to retrieve orted args
+* Need a small ![patch](https://github.com/fengyuleidian0615/ompi/commit/18607eb3b11a6c8b147f23ace6584741188d5d57) for ompi to retrieve orted args
 
 ## TODO
 * Add more functionality
