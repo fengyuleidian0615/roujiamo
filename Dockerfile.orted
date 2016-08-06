@@ -1,0 +1,30 @@
+FROM ubuntu
+MAINTAINER  Fan Du <fan.du@intel.com>
+
+#Update proxies if you are behind a firewall
+#ENV http_proxy 'YOUR_PROXY'
+#ENV https_proxy 'YOUR_PROXY'
+
+# Setting http{s}_proxy is not enough here to run
+# 'apt-get update' insided Docker
+#
+# In Ubuntu, update /etc/default/docker with your system DNS,
+# and restart Docker daemon, identify DNS server by:
+# nmcli device show | grep DNS
+#
+# DOCKER_OPTS="--dns YOUR_DNS_SERVER1 --dns YOUR_DNS_SERVER2"
+
+RUN apt-get update && apt-get install -y ssh unzip m4 autoconf automake libtool g++ flex make python
+RUN mkdir /ws/;\
+    cd /ws/;\
+    wget https://github.com/open-mpi/ompi/archive/master.zip;\
+    unzip master.zip;\
+    cd /ws/ompi-master;\
+    ./autogen.pl;\
+    ./configure;make install
+ADD mpi_hello_world.c /ws/
+ADD ompi-proxy.py /ws/
+RUN cd /ws; \
+    ldconfig;\
+    mpicc mpi_hello_world.c
+
