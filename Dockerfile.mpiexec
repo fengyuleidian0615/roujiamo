@@ -1,0 +1,29 @@
+FROM ubuntu
+MAINTAINER  Fan Du <fan.du@intel.com>
+
+#Update proxies if you are behind a firewall
+#ENV http_proxy 'YOUR_PROXY'
+#ENV https_proxy 'YOUR_PROXY'
+
+# Setting http{s}_proxy is not enough here to run
+# 'apt-get update' insided Docker
+#
+# In Ubuntu, update /etc/default/docker with your system DNS,
+# and restart Docker daemon, identify DNS server by:
+# nmcli device show | grep DNS
+#
+# DOCKER_OPTS="--dns YOUR_DNS_SERVER1 --dns YOUR_DNS_SERVER2"
+
+RUN apt-get update
+RUN apt-get install -y ssh \
+    unzip m4 autoconf automake libtool g++ flex make python build-essential python-dev libcurl4-nss-dev libsasl2-dev libsasl2-modules libapr1-dev libsvn-dev
+# Install customized ompi for Mesos
+RUN mkdir /ws/;\
+    cd /ws/;\
+    wget https://github.com/fengyuleidian0615/ompi/archive/ompi-mesos.zip;\
+    unzip ompi-mesos.zip;\
+    cd /ws/ompi-ompi-mesos;\
+    ./autogen.pl;\
+    ./configure;make install
+ADD ompirun* /ws/
+RUN ldconfig
